@@ -6,24 +6,27 @@ using namespace std;
 
 class BlackScholesModel {
 private:
-    double S0, r, sigma;
-    
+    double _S0, _r, _sigma;
+
 public:
-    BlackScholesModel(double S0_, double r_, double sigma_)
-        : S0(S0_), r(r_), sigma(sigma_) {}
+    BlackScholesModel(double S0, double r, double sigma)
+        : _S0(S0), _r(r), _sigma(sigma) {}
 
     double simulate_terminal_price(double T) const {
-        static std::mt19937_64 gen(42);
-        static std::normal_distribution<double> dist(0.0, 1.0);
+        static mt19937_64 gen(42);
+        static normal_distribution<double> dist(0.0, 1.0);
         double Z = dist(gen);
-        return S0 * exp((r - 0.5*sigma*sigma)*T + sigma*sqrt(T)*Z);
+        return _S0 * exp((_r - 0.5*_sigma*_sigma)*T + _sigma*sqrt(T)*Z);
     }
 };
 
 class Option {
+
+private:
+    double _K, _T;
+
 public:
-    double K, T;
-    Option(double K_, double T_) : K(K_), T(T_) {}
+    Option(double K, double T) : _K(K), _T(T) {}
     virtual double payoff(double ST) const = 0;
 };
 
@@ -31,7 +34,7 @@ class Call : public Option {
 public:
     Call(double K_, double T_) : Option(K_, T_) {}
     double payoff(double ST) const override {
-        return std::max(ST - K, 0.0);
+        return max(ST - K_, 0.0);
     }
 };
 
