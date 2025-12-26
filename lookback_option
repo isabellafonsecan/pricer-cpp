@@ -21,6 +21,7 @@ public:
         if (steps < 1) steps = 1;
     }
 
+    // Monte-Carlo simulation
     double price(int n_simulations) const {
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -57,7 +58,7 @@ public:
         return (sum_payoffs / n_simulations) * std::exp(-r * T);
     }
 
-    // ===== GREEKS =====
+    // ===== Main GREEKS (delta, vega, theta) =====
 
     double delta(int n_simulations, double bump = 0.01) const {
         LookbackOption up(S0 * (1 + bump), r, sigma, T, isCall);
