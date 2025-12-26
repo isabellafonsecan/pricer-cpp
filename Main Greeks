@@ -1,0 +1,42 @@
+struct Greeks {
+    double price;
+    double delta;
+    double vega;
+    double theta;
+};
+
+class GreeksEngine {
+public:
+    double dS = 0.01;
+    double dSigma = 0.01;
+    double dT = 1.0 / 365.0;
+
+    Greeks compute(
+        const Option& option,
+        const BlackScholesModel& model,
+        const MonteCarloPricer& pricer
+    ) const {
+        Greeks g;
+
+        double V = pricer.price(option, model);
+
+        BlackScholesModel mUpS(model.S0*(1+dS), model.r, model.sigma);
+        BlackScholesModel mDnS(model.S0*(1-dS), model.r, model.sigma);
+
+        BlackScholesModel mUpV(model.S0, model.r, model.sigma + dSigma);
+        BlackScholesModel mDnV(model.S0, model.r, model.sigma - dSigma);
+
+        BlackScholesModel mT(model.S0, model.r, model.sigma);
+        Option* optT = option.clone(option.maturity - dT);
+
+        g.price = V;
+        g.delta = (pricer.price(option, mUpS) - pricer.price(option, mDnS))
+                  / (2 * model.S0 * dS);
+        g.vega  = (pricer.price(option, mUpV) - pricer.price(option, mDnV))
+                  / (2 * dSigma);
+        g.theta = (pricer.price(*optT, model) - V) / dT;
+
+        delete optT;
+        return g;
+    }
+};
