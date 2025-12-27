@@ -10,13 +10,16 @@
 
 class CliquetOption : public Option {
 
+// private:
+//     double checkPoint; // intervalle de temps entre deux checks du cliquet
+
 public:
     CliquetOption(double K, double T, bool call) : Option(K, T, call) {}
 
     double payoff(const Stats& stats) const override {
         double payoff = 0.0;
         for (double r : stats.returns()) payoff += std::max(r, 0.0);
-        return payoff;
+        return payoff - _K;
     }
 
     std::string type() const override {

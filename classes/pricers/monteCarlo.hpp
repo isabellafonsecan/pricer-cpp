@@ -20,6 +20,7 @@ public:
     MonteCarloPricer(double s0, double rate, double vol, int nb_simulations) : _S0(s0), _r(rate), _sigma(vol), _nb_simulations(nb_simulations) {};
     
     double price(const Option& option) const override {
+
         // Determination of steps based on maturity
         int steps = static_cast<int>(std::round(option.getMaturity() * 252));
         if (steps < 1) steps = 1;

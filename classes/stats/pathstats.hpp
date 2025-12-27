@@ -18,8 +18,8 @@ public:
 
     // Function to update statistics with a new price S
     void update(double S) {
-        if (_n_steps > 0) {
-            double ret = S / _before_ST - 1.0;
+        if (_n_steps > 1) {
+            double ret = S - _before_ST;
             _returns.push_back(ret);
         }
 
