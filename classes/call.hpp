@@ -1,8 +1,7 @@
 #pragma once
 
 #include <iostream>
-
-#include "option.h"
+#include "option.hpp"
 
 class CallEuropean : public Option {
 

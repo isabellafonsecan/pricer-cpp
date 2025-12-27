@@ -1,3 +1,5 @@
+#include <iostream>
+
 class Option {
 
 protected:
@@ -7,5 +9,6 @@ protected:
 public:
     Option(double K, double T) : _K(K), _T(T) {}
     virtual double payoff(double ST) const = 0;
-    virtual ~Option() {}
+    virtual std::string type() const = 0;
+    virtual ~Option() {};
 };
