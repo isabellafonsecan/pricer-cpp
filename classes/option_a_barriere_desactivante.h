@@ -73,5 +73,5 @@ public:
 
         return (sum_payoffs / n_simulations) * std::exp(-r * T);
     }
-}
+};
 
