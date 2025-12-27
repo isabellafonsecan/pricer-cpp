@@ -14,4 +14,3 @@ On utilisera le code suivant pour les options:
 - Exotic Lookback Option Put: EXLOOPUT
 - Exotic Option A Barrière Desactivante Call: EXBKOCA
 - Exotic Option A Barrière Desactivante Put: EXBKOPUT
-

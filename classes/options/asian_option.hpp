@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -66,5 +67,10 @@ public:
 
     // Nous dis le nombre de jours de cotation pris en compte pour le caclul
     int getSteps() const { return steps; }
+
+    // Return the option type code (EXASICA for call, EXASIPUT for put)
+    std::string type() const {
+        return isCall ? "EXASICA" : "EXASIPUT";
+    }
 };
 

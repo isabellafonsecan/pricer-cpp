@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -72,6 +73,11 @@ public:
         }
 
         return (sum_payoffs / n_simulations) * std::exp(-r * T);
+    }
+
+    // Return the option type code (EXBKOCA for call, EXBKOPUT for put)
+    std::string type() const {
+        return isCall ? "EXBKOCA" : "EXBKOPUT";
     }
 };
 

@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 
 class Option {
@@ -11,4 +12,12 @@ public:
     virtual double payoff(double ST) const = 0;
     virtual std::string type() const = 0;
     virtual ~Option() {};
+
+    double strike() const {
+        return _K;
+    }
+
+    double maturity() const {
+        return _T;
+    }
 };

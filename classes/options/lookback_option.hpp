@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <vector>
 #include <cmath>
@@ -81,5 +82,10 @@ public:
 
         return (shorter.price(n_simulations) - price(n_simulations))
                / bump;
+    }
+
+    // Return the option type code (EXLOOCA for call, EXLOOPUT for put)
+    std::string type() const {
+        return isCall ? "EXLOOCA" : "EXLOOPUT";
     }
 };
