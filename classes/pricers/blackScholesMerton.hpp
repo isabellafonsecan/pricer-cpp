@@ -25,8 +25,8 @@ class BlackScholesMerton : public Pricer {
             std::string type = option.type();
             assert(type == "VANEUCA" || type == "VANEUPUT");
 
-            double d1 = (log(_S0 / _K) + (_r + 0.5 * _sigma * _sigma) * option.maturity()) / (_sigma * sqrt(option.maturity()));
-            double d2 = d1 - _sigma * sqrt(option.maturity());
+            double d1 = (log(_S0 / _K) + (_r + 0.5 * _sigma * _sigma) * option.getMaturity()) / (_sigma * sqrt(option.getMaturity()));
+            double d2 = d1 - _sigma * sqrt(option.getMaturity());
 
             // Fonction de répartition cumulative de la loi normale
             auto N = [](double x) {
@@ -34,11 +34,12 @@ class BlackScholesMerton : public Pricer {
             };
 
             if (type == "VANEUCA") {
-                return _S0 * N(d1) - _K * exp(-_r * option.maturity()) * N(d2);
+                return _S0 * N(d1) - _K * exp(-_r * option.getMaturity()) * N(d2);
             } else if (type == "VANEUPUT") {
-                return _K * exp(-_r * option.maturity()) * N(-d2) - _S0 * N(-d1);
+                return _K * exp(-_r * option.getMaturity()) * N(-d2) - _S0 * N(-d1);
             }
+            return 0.0; // Should never reach here
         }
 
-        double delta() const override;
+        ~BlackScholesMerton() override {};
 };

@@ -8,8 +8,8 @@ On utilisera le code suivant pour les options:
 - Vanilla American Put: VANAMPU
 - Exotic Asian Call: EXASICA
 - Exotic Asian Put: EXASIPUT
-- Exotic Criquet Option Call: EXCRICA
-- Exotic Criquet Option Put: EXCRIPUT
+- Exotic Cliquet Option Call: EXCLICA
+- Exotic Cliquet Option Put: EXCLIPUT
 - Exotic Lookback Option Call: EXLOOCA
 - Exotic Lookback Option Put: EXLOOPUT
 - Exotic Option A Barrière Desactivante Call: EXBKOCA
