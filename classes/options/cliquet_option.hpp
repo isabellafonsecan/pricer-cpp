@@ -1,31 +1,33 @@
 #pragma once
 #include <iostream>
 #include <vector>
-#include <cmath>
-#include <algorithm>
-#include <random>
 
 #include "option.hpp"
 #include "../stats/pathstats.hpp"
 
+// The class CliquetOption represents a cliquet option
+// Its payoff is based on the sum of positive returns over the option's life, minus a strike price.
+// In this case the gains are checked everyday, however in real life it is often monthly or quarterly.
 class CliquetOption : public Option {
-
-// private:
-//     double checkPoint; // intervalle de temps entre deux checks du cliquet
-
 public:
+    // Constructor
     CliquetOption(double K, double T, bool call) : Option(K, T, call) {}
 
+    // Payoff function based on sum of positive gains retrieved from path statistics
     double payoff(const Stats& stats) const override {
         double payoff = 0.0;
-        for (double r : stats.returns()) payoff += std::max(r, 0.0);
-        return payoff - _K;
+
+        // We only sum positive returns
+        for (double r : stats.gains()) payoff += std::max(r, 0.0);
+        return std::max(payoff - _K, 0.0);
     }
 
+    // Return the option type code (EXCLICA for call, EXCLIPUT for put)
     std::string type() const override {
-        return isCall ? "EXCLICA" : "EXCLIPUT";
+        return _isCall ? "EXCLICA" : "EXCLIPUT";
     }
 
+    // Destructor
     ~CliquetOption() override {}
 
     // // ===== Main GREEKS (delta, vega, theta) =====

@@ -1,12 +1,13 @@
 #include <iostream>
+#include <random>
 
-#include "pricer.hpp"
-#include "../options/asian_option.hpp"
-#include "../options/lookback_option.hpp"
-#include "../options/option_a_barriere_desactivante.hpp"
-#include "../options/cliquet_option.hpp"
-
+#include "../options/option.hpp"
 #include "../stats/pathstats.hpp"
+
+// The class MonteCarloPricer implements a Monte Carlo pricing model for various types of options.
+// It simulates multiple paths of the underlying asset price and calculates the average discounted payoff.
+// We use polymorphism to handle different option types through the Option base class. 
+//It allows us to use the payoff method defined in each derived option class.
 
 class MonteCarloPricer : public Pricer {
 private:
@@ -17,19 +18,22 @@ private:
     
 
 public:
+    // Constructor
     MonteCarloPricer(double s0, double rate, double vol, int nb_simulations) : _S0(s0), _r(rate), _sigma(vol), _nb_simulations(nb_simulations) {};
     
+    // Method to calculate the price of the option
     double price(const Option& option) const override {
 
-        // Determination of steps based on maturity
+        // Determination of steps based on maturity, assuming 252 trading days per year
         int steps = static_cast<int>(std::round(option.getMaturity() * 252));
+
+        // At least 1 step (at least one trading day)
         if (steps < 1) steps = 1;
 
-        // Calculation of the average price
-        // Initialize the random number generator
-        std::random_device rd; // Le vrai aléatoire
-        std::mt19937 gen(rd()); // le "faux aleatoire"
-        std::normal_distribution<double> dist(0.0, 1.0);
+        // Initialization of the random number generator
+        // std::random_device rd; // Random seed
+        std::mt19937 gen(42); // Fixed seed for reproducibility
+        std::normal_distribution<double> dist(0.0, 1.0); // Standard normal distribution
 
         // Constant calculations to optimize the loop
         double dt = option.getMaturity() / static_cast<double>(steps);
@@ -41,10 +45,15 @@ public:
 
         // Monte Carlo simulations
         for (int i = 0; i < _nb_simulations; ++i) {
+            // The initial price for this path is 
             double S = _S0;
+
+            // We initialize path statistics that will be updated at each step
             Stats stats = Stats();
 
+            // Simulation of the price path
             for (int j = 0; j < steps; ++j) {
+
                 double z = dist(gen);
 
                 // Évolution du prix (Mouvement Brownien Géométrique)
@@ -58,6 +67,9 @@ public:
 
         } 
 
-        return sum_payoff / _nb_simulations * std::exp(-_r * option.getMaturity());
+        // Return the discounted average payoff
+        double discount_factor = std::exp(-_r * option.getMaturity());
+        double average_payoff = sum_payoff / _nb_simulations;
+        return average_payoff * discount_factor;
     }   
 };
