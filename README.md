@@ -1,7 +1,11 @@
-### Projet de Pricer d'options ENSAE Paris
+# Projet de Pricer d'options ENSAE Paris
 
-# Code des options
+## Compilation du code
+Sur la ligne de commande, dans le dossier où se trouve main.cpp exécuter les commandes suivante:
+g++ ../main.cpp -o main
+./main
 
+## Code des options
 On utilisera le code suivant pour les options. Le code n'est pour le moment utile que pour le black,scholes pricer 
 
 - Vanilla European Call: VANEUCA
