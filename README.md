@@ -1,8 +1,10 @@
 # Projet de Pricer d'options ENSAE Paris
 
 ## Compilation du code
-Sur la ligne de commande, dans le dossier où se trouve main.cpp exécuter les commandes suivante:
+Sur la ligne de commande, dans le dossier où se trouve main.cpp exécuter les commandes suivantes:
+
 g++ ../main.cpp -o main
+
 ./main
 
 ## Code des options
