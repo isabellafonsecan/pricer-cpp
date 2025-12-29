@@ -20,6 +20,11 @@ public:
         }
     }
 
+    // Return a copy of the option with a new maturity, it will be used for theta calculation in monte carlo pricer
+    Option* cloneWithMaturity(double newMaturity) const override {
+        return new LookbackOption(_K, newMaturity, _isCall);
+    }
+
     // Return the option type code (EXLOOCA for call, EXLOOPUT for put)
     std::string type() const override {
         return _isCall ? "EXLOOCA" : "EXLOOPUT";
@@ -27,29 +32,4 @@ public:
 
     // Destructor
     ~LookbackOption() override {}
-
-    // // ===== Main GREEKS (delta, vega, theta) =====
-
-    // double delta(int n_simulations, double bump = 0.01) const {
-    //     LookbackOption up(S0 * (1 + bump), r, sigma, T, isCall);
-    //     LookbackOption down(S0 * (1 - bump), r, sigma, T, isCall);
-
-    //     return (up.price(n_simulations) - down.price(n_simulations))
-    //            / (2 * S0 * bump);
-    // }
-
-    // double vega(int n_simulations, double bump = 0.01) const {
-    //     LookbackOption up(S0, r, sigma + bump, T, isCall);
-    //     LookbackOption down(S0, r, sigma - bump, T, isCall);
-
-    //     return (up.price(n_simulations) - down.price(n_simulations))
-    //            / (2 * bump);
-    // }
-
-    // double theta(int n_simulations, double bump = 1.0 / 365.0) const {
-    //     LookbackOption shorter(S0, r, sigma, T - bump, isCall);
-
-    //     return (shorter.price(n_simulations) - price(n_simulations))
-    //            / bump;
-    // }
 };

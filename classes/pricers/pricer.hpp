@@ -7,7 +7,10 @@ public:
     // methods to be implemented by derived classes
     // function to calculate the price of the option
     virtual double price(const Option& option) const = 0;
+    virtual double delta(const Option& option) const = 0;
+    virtual double vega(const Option& option) const = 0;
+    virtual double theta(const Option& option) const = 0;
 
     //destructor
-    virtual ~Pricer() {} 
+    virtual ~Pricer() {}; 
 };

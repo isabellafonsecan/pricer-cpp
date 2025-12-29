@@ -11,9 +11,13 @@ protected:
 public:
     // Constructor
     Option(double K, double T, bool isCall) : _K(K), _T(T), _isCall(isCall) {}
+
     // Methods to be implemented by derived classes
     // Function to calculate the payoff given the path statistics, will be used in the Monte Carlo pricer
     virtual double payoff(const Stats& pathStats) const = 0;
+
+    // Copy function
+    virtual Option* cloneWithMaturity(double newMaturity) const = 0;
 
     // Function to return the option type as a string, will be used in the black scholes pricer
     virtual std::string type() const = 0;

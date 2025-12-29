@@ -38,6 +38,11 @@ public:
         }
     }
 
+    // Return a copy of the option with a new maturity, it will be used for theta calculation in monte carlo pricer
+    Option* cloneWithMaturity(double newMaturity) const override {
+        return new barriereOption(_K, newMaturity, _isCall, _barrier, _type);
+    }   
+
     // Type function
     std::string type() const override {
         return _isCall ? "EXBARICA" : "EXBARIPUT";

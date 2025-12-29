@@ -16,6 +16,11 @@ public:
         return _isCall ? std::max(average_S - _K, 0.0) : std::max(_K - average_S, 0.0);
     }
 
+    // Return a copy of the option with a new maturity, it will be used for theta calculation in monte carlo pricer
+    Option* cloneWithMaturity(double newMaturity) const override {
+        return new AsianOption(_K, newMaturity, _isCall);
+    }
+    
     // Return the option type code (EXASICA for call, EXASIPUT for put)
     std::string type() const override {
         return _isCall ? "EXASICA" : "EXASIPUT";

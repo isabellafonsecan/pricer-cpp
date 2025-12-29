@@ -72,4 +72,43 @@ public:
         double average_payoff = sum_payoff / _nb_simulations;
         return average_payoff * discount_factor;
     }   
+    double delta(const Option& option) const override {
+
+        double bump = 0.01 * _S0;
+        MonteCarloPricer upPricer(_S0 + bump, _r, _sigma, _nb_simulations);
+        MonteCarloPricer downPricer(_S0 - bump, _r, _sigma, _nb_simulations);
+
+        double upPrice = upPricer.price(option);
+        double downPrice = downPricer.price(option);
+
+        return (upPrice - downPrice) / (2 * bump);
+    }
+
+    double vega(const Option& option) const override {
+
+        double bump = 0.01;
+        MonteCarloPricer upPricer(_S0, _r, _sigma + bump, _nb_simulations);
+        MonteCarloPricer downPricer(_S0, _r, _sigma - bump, _nb_simulations);
+
+        double upPrice = upPricer.price(option);
+        double downPrice = downPricer.price(option);
+
+        return (upPrice - downPrice) / (2 * bump);
+    }
+
+    double theta(const Option& option) const override {
+
+        double bump = 1.0 / 365.0; // One day
+
+        MonteCarloPricer shorterPricer(_S0, _r, _sigma, _nb_simulations);
+        MonteCarloPricer originalPricer(_S0, _r, _sigma, _nb_simulations);
+
+        auto shorterOption = option.cloneWithMaturity(option.getMaturity() - bump);
+        double shorterPrice = shorterPricer.price(*shorterOption);
+        delete shorterOption;
+
+        double originalPrice = originalPricer.price(option);
+
+        return (shorterPrice - originalPrice) / bump;
+    }
 };

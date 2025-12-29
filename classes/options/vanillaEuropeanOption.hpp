@@ -16,6 +16,11 @@ public:
         return _isCall ? std::max(ST - _K, 0.0) : std::max(_K - ST, 0.0);
     }
 
+    // Return a copy of the option with a new maturity, it will be used for theta calculation in monte carlo pricer
+    Option* cloneWithMaturity(double newMaturity) const override {
+        return new VanillaEuropeanOption(_K, newMaturity, _isCall);
+    }
+
     // Return the option type code (VANEUCA for call, VANEUPUT for put)
     std::string type() const override {
         return _isCall ? "VANEUCA" : "VANEUPUT";
