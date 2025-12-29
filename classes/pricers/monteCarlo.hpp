@@ -98,7 +98,9 @@ public:
 
     double theta(const Option& option) const override {
 
-        double bump = 1.0 / 365.0; // One day
+        double bump = 1.0 / 365.0; // one day in years
+        double T = option.getMaturity();
+        if (T <= bump) bump = 0.5 * T;
 
         MonteCarloPricer shorterPricer(_S0, _r, _sigma, _nb_simulations);
         MonteCarloPricer originalPricer(_S0, _r, _sigma, _nb_simulations);
@@ -110,5 +112,13 @@ public:
         double originalPrice = originalPricer.price(option);
 
         return (shorterPrice - originalPrice) / bump;
+    }
+
+        std::pair<double, double> hedgingPortfolio(const Option& option) const override {
+        // Compute a static delta hedge: returns (underlying units, cash)
+        double hedgeDelta = delta(option);          // hedge ratio vs underlying
+        double optPrice   = price(option);          // option fair value
+        double cash       = optPrice - hedgeDelta * _S0; // cash to finance hedge
+        return {hedgeDelta, cash};
     }
 };

@@ -41,7 +41,7 @@ int main() {
     double K = 100.0;    // Prix d'exercice
     double r = 0.05;     // Taux d'intérêt sans risque
     double sigma = 0.2;  // Volatilité
-    double T = 1.0;      // Maturité en années
+    double T = 1;      // Maturité en années
 
     // Nombre de simulations pour Monte Carlo
     int n_simulations = 200000;
@@ -68,12 +68,14 @@ int main() {
 
     // Calcul et affichage des prix
 std::cout << "===== VANILLA OPTIONS =====" << std::endl;
-// --- Call ---
+// --- Call ---0
 std::cout << "Vanilla Call (BSM)" << std::endl;
 std::cout << "Price: " << bsmPricer.price(callOption) << std::endl;
 std::cout << "Delta: " << bsmPricer.delta(callOption) << std::endl;
 std::cout << "Vega : " << bsmPricer.vega(callOption) << std::endl;
 std::cout << "Theta: " << bsmPricer.theta(callOption) << std::endl;
+auto hedgeCall_BSM = bsmPricer.hedgingPortfolio(callOption);
+std::cout << "Hedging Portfolio (units, cash): (" << hedgeCall_BSM.first << ", " << hedgeCall_BSM.second << ")" << std::endl;
 std::cout << "--------------------------------" << std::endl;
 
 std::cout << "Vanilla Call (Monte Carlo)" << std::endl;
@@ -81,6 +83,8 @@ std::cout << "Price: " << mcPricer.price(callOption) << std::endl;
 std::cout << "Delta: " << mcPricer.delta(callOption) << std::endl;
 std::cout << "Vega : " << mcPricer.vega(callOption) << std::endl;
 std::cout << "Theta: " << mcPricer.theta(callOption) << std::endl;
+auto hedgeCall_MC = mcPricer.hedgingPortfolio(callOption);
+std::cout << "Hedging Portfolio (units, cash): (" << hedgeCall_MC.first << ", " << hedgeCall_MC.second << ")" << std::endl;
 std::cout << "--------------------------------" << std::endl;
 
 // --- Put ---
@@ -89,6 +93,8 @@ std::cout << "Price: " << bsmPricer.price(putOption) << std::endl;
 std::cout << "Delta: " << bsmPricer.delta(putOption) << std::endl;
 std::cout << "Vega : " << bsmPricer.vega(putOption) << std::endl;
 std::cout << "Theta: " << bsmPricer.theta(putOption) << std::endl;
+auto hedgePut_BSM = bsmPricer.hedgingPortfolio(putOption);
+std::cout << "Hedging Portfolio (units, cash): (" << hedgePut_BSM.first << ", " << hedgePut_BSM.second << ")" << std::endl;
 std::cout << "--------------------------------" << std::endl;
 
 std::cout << "Vanilla Put (Monte Carlo)" << std::endl;
@@ -96,76 +102,78 @@ std::cout << "Price: " << mcPricer.price(putOption) << std::endl;
 std::cout << "Delta: " << mcPricer.delta(putOption) << std::endl;
 std::cout << "Vega : " << mcPricer.vega(putOption) << std::endl;
 std::cout << "Theta: " << mcPricer.theta(putOption) << std::endl;
+auto hedgePut_MC = mcPricer.hedgingPortfolio(putOption);
+std::cout << "Hedging Portfolio (units, cash): (" << hedgePut_MC.first << ", " << hedgePut_MC.second << ")" << std::endl;
 std::cout << "--------------------------------" << std::endl;
 
-std::cout << "===== ASIAN OPTIONS =====" << std::endl;
-// Call
-std::cout << "Asian Call (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(asianOptionCall) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(asianOptionCall) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(asianOptionCall) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(asianOptionCall) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// std::cout << "===== ASIAN OPTIONS =====" << std::endl;
+// // Call
+// std::cout << "Asian Call (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(asianOptionCall) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(asianOptionCall) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(asianOptionCall) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(asianOptionCall) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-// Put
-std::cout << "Asian Put (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(asianOptionPut) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(asianOptionPut) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(asianOptionPut) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(asianOptionPut) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// // Put
+// std::cout << "Asian Put (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(asianOptionPut) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(asianOptionPut) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(asianOptionPut) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(asianOptionPut) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-std::cout << "===== LOOKBACK OPTIONS =====" << std::endl;
-// Call
-std::cout << "Lookback Call (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(lookbackOptionCall) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(lookbackOptionCall) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(lookbackOptionCall) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(lookbackOptionCall) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// std::cout << "===== LOOKBACK OPTIONS =====" << std::endl;
+// // Call
+// std::cout << "Lookback Call (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(lookbackOptionCall) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(lookbackOptionCall) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(lookbackOptionCall) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(lookbackOptionCall) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-// Put
-std::cout << "Lookback Put (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(lookbackOptionPut) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(lookbackOptionPut) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(lookbackOptionPut) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(lookbackOptionPut) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// // Put
+// std::cout << "Lookback Put (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(lookbackOptionPut) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(lookbackOptionPut) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(lookbackOptionPut) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(lookbackOptionPut) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-std::cout << "===== CLIQUET OPTIONS =====" << std::endl;
-// Call
-std::cout << "Cliquet Call (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(cliquetOptionCall) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(cliquetOptionCall) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(cliquetOptionCall) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(cliquetOptionCall) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// std::cout << "===== CLIQUET OPTIONS =====" << std::endl;
+// // Call
+// std::cout << "Cliquet Call (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(cliquetOptionCall) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(cliquetOptionCall) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(cliquetOptionCall) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(cliquetOptionCall) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-// Put
-std::cout << "Cliquet Put (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(cliquetOptionPut) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(cliquetOptionPut) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(cliquetOptionPut) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(cliquetOptionPut) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// // Put
+// std::cout << "Cliquet Put (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(cliquetOptionPut) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(cliquetOptionPut) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(cliquetOptionPut) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(cliquetOptionPut) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-std::cout << "===== BARRIER OPTIONS =====" << std::endl;
-// Call
-std::cout << "Barrier Call (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(barrierOptionCall) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(barrierOptionCall) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(barrierOptionCall) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(barrierOptionCall) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// std::cout << "===== BARRIER OPTIONS =====" << std::endl;
+// // Call
+// std::cout << "Barrier Call (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(barrierOptionCall) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(barrierOptionCall) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(barrierOptionCall) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(barrierOptionCall) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
-// Put
-std::cout << "Barrier Put (Monte Carlo)" << std::endl;
-std::cout << "Price: " << mcPricer.price(barrierOptionPut) << std::endl;
-std::cout << "Delta: " << mcPricer.delta(barrierOptionPut) << std::endl;
-std::cout << "Vega : " << mcPricer.vega(barrierOptionPut) << std::endl;
-std::cout << "Theta: " << mcPricer.theta(barrierOptionPut) << std::endl;
-std::cout << "--------------------------------" << std::endl;
+// // Put
+// std::cout << "Barrier Put (Monte Carlo)" << std::endl;
+// std::cout << "Price: " << mcPricer.price(barrierOptionPut) << std::endl;
+// std::cout << "Delta: " << mcPricer.delta(barrierOptionPut) << std::endl;
+// std::cout << "Vega : " << mcPricer.vega(barrierOptionPut) << std::endl;
+// std::cout << "Theta: " << mcPricer.theta(barrierOptionPut) << std::endl;
+// std::cout << "--------------------------------" << std::endl;
 
 
-    return 0;
-}
+//     return 0;
+// }

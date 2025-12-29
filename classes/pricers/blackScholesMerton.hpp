@@ -102,6 +102,15 @@ public:
         }
     }
 
+        // Hedging portfolio: (underlying units, cash)
+        std::pair<double, double> hedgingPortfolio(const Option& option) const override {
+        // Compute a static delta hedge: returns (underlying units, cash)
+        double hedgeDelta = delta(option);          // hedge ratio vs underlying
+        double optPrice   = price(option);          // option fair value
+        double cash       = optPrice - hedgeDelta * _S0; // cash to finance hedge
+        return {hedgeDelta, cash};
+    }
+
     // Destructor
     ~BlackScholesMerton() override {}
 };
