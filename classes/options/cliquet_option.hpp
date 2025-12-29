@@ -18,7 +18,11 @@ public:
         double payoff = 0.0;
 
         // We only sum positive returns
-        for (double r : stats.gains()) payoff += std::max(r, 0.0);
+        if (_isCall) {
+            for (double r : stats.gains()) payoff += std::max(r, 0.0);
+        } else {
+            for (double r : stats.gains()) payoff += std::max(-r, 0.0);
+        }
         return std::max(payoff - _K, 0.0);
     }
 
